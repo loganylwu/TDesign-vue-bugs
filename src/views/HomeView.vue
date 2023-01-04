@@ -1,18 +1,36 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <p>点击后1s会切换路由，但是dialog仍然存在</p>
+    <t-button @click="onClick">点击触发bug</t-button>
+    <t-dialog :visible.sync="visible" attach="body">
+      <p>当前路由地址：{{path}}</p>
+      <p>ps:路由地址没变化，说明了组件已经被销毁，但是DOM依然存在</p>
+    </t-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 
 export default Vue.extend({
   name: 'HomeView',
-  components: {
-    HelloWorld
+  data: () => {
+    return {
+      visible: false
+    }
+  },
+  computed: {
+    path () {
+      return this.$route.path
+    }
+  },
+  methods: {
+    onClick () {
+      this.visible = true
+      setTimeout(() => {
+        this.$router.push('/about')
+      }, 1000)
+    }
   }
 })
 </script>
